@@ -18,7 +18,9 @@ const Yarn: React.FC = () => {
     });
 
     return (
-        <Text>{JSON.stringify(yarns[0])}</Text>
+        <View>
+            {yarns.map((yarn) => <Text>{JSON.stringify(yarn.name)}</Text>)}
+        </View>
     );
 }
 
