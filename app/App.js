@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Home from './pages/Home';
 import AddProject from './pages/AddProject';
+import Yarn from './pages/Yarn';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -13,6 +14,7 @@ export default function App() {
       <Tab.Navigator initialRouteName="Home">
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="AddProject" component={AddProject} />
+        <Tab.Screen name="Yarn" component={Yarn} />
       </Tab.Navigator>
     </NavigationContainer>
   );
