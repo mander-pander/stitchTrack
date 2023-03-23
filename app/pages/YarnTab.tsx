@@ -2,8 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
 
-const Yarn: React.FC = () => {
+const YarnTab: React.FC = () => {
     const [yarns, setYarns] = useState<any[]>([]);
+    const [yarn, setYarn] = useState({
+        yarn_name: '',
+        weight: 0,
+        yardage: 0,
+        color: '',
+        project_id: 0
+    });
 
     useEffect(() => {
         const getYarn = async() => {
@@ -24,4 +31,4 @@ const Yarn: React.FC = () => {
     );
 }
 
-export default Yarn;
+export default YarnTab;
