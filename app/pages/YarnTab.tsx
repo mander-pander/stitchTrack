@@ -64,6 +64,7 @@ const YarnTab: React.FC = () => {
             visible={isModalVisible}
           >
             <Text>{JSON.stringify(yarn.name)}</Text>
+            <Text onPress={hideModal}>Close</Text>
           </Modal>
         </View>
       ))}
