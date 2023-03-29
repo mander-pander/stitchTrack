@@ -53,11 +53,11 @@ const YarnTab: React.FC = () => {
 
   return (
     <View>
-      <Text onPress={showForm}>Add Yarn</Text>
+      <Text onPress={showForm} style={styles.addYarnBtn}>Add Yarn</Text>
       {yarns.map((yarn) => (
-        <View key={yarn.id}>
+        <View key={yarn.id} style={styles.yarnContainer}>
           <Text onPress={toggleModal}>
-            {JSON.stringify(yarn.name)}
+            {yarn.name}
           </Text>
           <Modal
             ref={modalRef}
@@ -71,5 +71,14 @@ const YarnTab: React.FC = () => {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  yarnContainer: {
+    alignItems: 'center',
+  },
+  addYarnBtn: {
+    alignSelf: 'flex-end',
+  }
+})
 
 export default YarnTab;
