@@ -53,13 +53,36 @@ const AddProject = () => {
 
     return (
         <View>
-            <Text>Add new project</Text>
-            <Gauge />
-            <Tool />
-            <Yarn />
-            <Text onPress={handleAddProject}>Add Project</Text>
+            <Text style={styles.title}>What are you working on?</Text>
+            <View>
+              <Text>Name:</Text>
+              <TextInput
+                  value={project.name}
+                  onChange={handleProjectChange}
+              />
+              <Gauge gauge={project.gauge} onChange={handleProjectChange} />
+              <Tool needle_size={project.needle_size} onChange={handleProjectChange}/>
+              <Yarn yarn_name={yarn.yarn_name} weight={yarn.weight} yardage={yarn.yardage} color={yarn.color} onChange={handleYarnChange} />
+              <Text style={styles.submitBtn} onPress={handleAddProject}>Add Project</Text>
+            </View>
         </View>
-    )
+    );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    alignSelf: 'center',
+  },
+  submitBtn: {
+    alignSelf: 'center',
+    height: 20,
+    width: 80,
+    borderRadius: 8,
+    shadowColor: '#52006A',
+    shadowRadius: 5,
+    shadowOpacity: .9,
+    shadowOffset: {width: -2, height: 4},
+  },
+});
 
 export default AddProject;
