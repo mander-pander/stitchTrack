@@ -78,7 +78,12 @@ const styles = StyleSheet.create({
   },
   addYarnBtn: {
     alignSelf: 'flex-end',
-  }
+    padding: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
 })
 
 export default YarnTab;
