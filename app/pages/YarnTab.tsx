@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Pressable, Modal } from 'react-native';
 import axios from 'axios';
+import Yarn from '../Components/Yarn';
 
 const YarnTab: React.FC = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [yarns, setYarns] = useState<any[]>([]);
-  // const [yarn, setYarn] = useState({
-  //     yarn_name: '',
-  //     weight: 0,
-  //     yardage: 0,
-  //     color: '',
-  //     project_id: 0
-  // });
+  const [newYarn, setNewYarn] = useState({
+      yarn_name: '',
+      weight: 0,
+      yardage: 0,
+      color: '',
+      project_id: 0
+  });
 
   const modalRef = useRef(null);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -44,11 +45,19 @@ const YarnTab: React.FC = () => {
 
   const showForm = () => {
     setShowAdd(true);
-  }
+  };
+
+  const handleYarnChange = (e: any) => {
+    e.preventDefault();
+    setNewYarn({
+      ...newYarn,
+      [e.target.name]: e.target.value
+    });
+  };
 
   if (showAdd) {
-    //form will go here to add new yarn
-    return <Text>add or edit here</Text>;
+    //form for new yarn addition
+    return <Yarn yarn_name={newYarn.yarn_name} weight={newYarn.weight} yardage={newYarn.yardage} color={newYarn.color} onChange={handleYarnChange} />;
   }
 
   return (
