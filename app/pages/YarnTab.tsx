@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, Text, View, Pressable, Modal } from 'react-native';
 import axios from 'axios';
 import Yarn from '../Components/Yarn';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const YarnTab: React.FC = () => {
   const [showAdd, setShowAdd] = useState(false);
@@ -44,7 +45,7 @@ const YarnTab: React.FC = () => {
   });
 
   const showForm = () => {
-    setShowAdd(true);
+    setShowAdd(!showAdd);
   };
 
   const handleYarnChange = (e: any) => {
@@ -55,18 +56,33 @@ const YarnTab: React.FC = () => {
     });
   };
 
+  const handleAddYarn = async (e: any) => {
+    e.preventDefault();
+    let res = await axios.post('http://localhost:3001/yarn', {
+      newYarn
+    });
+    console.log(res);
+    console.log(newYarn);
+  };
+
   if (showAdd) {
     //form for new yarn addition
-    return <Yarn yarn_name={newYarn.yarn_name} weight={newYarn.weight} yardage={newYarn.yardage} color={newYarn.color} onChange={handleYarnChange} />;
+    return (
+      <>
+        <Yarn yarn_name={newYarn.yarn_name} weight={newYarn.weight} yardage={newYarn.yardage} color={newYarn.color} onChange={handleYarnChange} />
+        <Text onPress={handleAddYarn}>Add Yarn</Text>
+        <Text onPress={showForm}>Go Back</Text>
+      </>
+    );
   }
 
   return (
-    <View>
+    <View style={styles.yarnContainer}>
       <Text onPress={showForm} style={styles.addYarnBtn}>Add Yarn</Text>
       {yarns.map((yarn) => (
-        <View key={yarn.id} style={styles.yarnContainer}>
-          <Text onPress={toggleModal}>
-            {yarn.name}
+        <View key={yarn.id} >
+          <Text style={styles.yarnList}  onPress={toggleModal}>
+          <Ionicons name="flower-outline"/> {yarn.name}
           </Text>
           <Modal
             ref={modalRef}
@@ -83,16 +99,21 @@ const YarnTab: React.FC = () => {
 
 const styles = StyleSheet.create({
   yarnContainer: {
-    alignItems: 'center',
+    backgroundColor: '#F9DBBD',
+    minHeight: '100%',
   },
   addYarnBtn: {
     alignSelf: 'flex-end',
-    padding: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 3,
+    padding: 3,
+    color: '#FFA5AB',
+    backgroundColor: '#450920',
+    marginTop: 5,
+    marginRight: 2,
   },
+  yarnList: {
+    color: '#450920',
+    fontSize: 20,
+  }
 })
 
 export default YarnTab;

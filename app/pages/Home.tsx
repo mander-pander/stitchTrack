@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Modal } from 'react-native';
 import React from "react";
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const Home = () => {
     const [projects, setProjects] = useState<any[]>([]);
@@ -10,7 +11,7 @@ const Home = () => {
     useEffect(() => {
       async function getProjects() {
         try {
-          let response = await axios.get(`http://10.7.24.27:3001/project`);
+          let response = await axios.get(`http://192.168.1.150:3001/project`);
           if (response.data) {
             setProjects(response.data);
           }
@@ -40,11 +41,11 @@ const Home = () => {
       };
 
       return (
-        <View>
+        <View style={styles.container}>
           {projects.map((project) => (
             <View key={project.id}>
-              <Text onPress={toggleModal}>
-                {JSON.stringify(project.name)}
+              <Text style={styles.projectList} onPress={toggleModal}>
+              <Ionicons name="flower-outline"/> {project.name}
               </Text>
               <Modal
                 ref={modalRef}
@@ -58,5 +59,16 @@ const Home = () => {
         </View>
       );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#F9DBBD',
+    minHeight: '100%',
+  },
+  projectList: {
+    fontSize: 20,
+    color: '#450920',
+  }
+});
 
 export default Home;
