@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View, Modal } from 'react-native';
+import { StyleSheet, Text, View, Modal, Button } from 'react-native';
 import React from "react";
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Card } from '@rneui/themed';
 
 const Home = () => {
     const [projects, setProjects] = useState<any[]>([]);
@@ -11,7 +11,7 @@ const Home = () => {
     useEffect(() => {
       async function getProjects() {
         try {
-          let response = await axios.get(`http://192.168.1.150:3001/project`);
+          let response = await axios.get(`http://10.113.6.118:3001/project`);
           if (response.data) {
             setProjects(response.data);
           }
@@ -19,9 +19,8 @@ const Home = () => {
           console.log(err);
         }
       }
-
       getProjects();
-      }, [])
+      }, []);
 
       const modalRef = useRef(null);
       const [isModalVisible, setModalVisible] = useState(false);
@@ -43,18 +42,35 @@ const Home = () => {
       return (
         <View style={styles.container}>
           {projects.map((project) => (
-            <View key={project.id}>
+            <Card key={project.id}>
               <Text style={styles.projectList} onPress={toggleModal}>
-              <Ionicons name="flower-outline"/> {project.name}
+                {project.name}
               </Text>
               <Modal
                 ref={modalRef}
                 visible={isModalVisible}
               >
-                <Text>{JSON.stringify(project.name)}</Text>
-                <Text onPress={hideModal}>Close</Text>
+
+                <View style={styles.modalInfo}>
+                <Text>
+                  Project Name: {project.name}
+                </Text>
+                <Text>
+                  Needle Size: {project.needle_size}
+                </Text>
+                <Text>
+                  Gauge: {project.gauge}
+                </Text>
+                <Text>
+                  Notes: {project.notes}
+                </Text>
+                  <View style={styles.buttons}>
+                    <Button color="#450920" title="Go back to projects" onPress={hideModal} />
+                    <Button color="#450920" title="Edit project details" />
+                  </View>
+                </View>
               </Modal>
-            </View>
+            </Card>
           ))}
         </View>
       );
@@ -68,6 +84,15 @@ const styles = StyleSheet.create({
   projectList: {
     fontSize: 20,
     color: '#450920',
+  },
+  modalInfo: {
+    minHeight: '100%',
+    backgroundColor: '#F9DBBD',
+    color: '#450920',
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   }
 });
 
