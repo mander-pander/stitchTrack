@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Pressable, Modal } from 'react-native';
 import axios from 'axios';
 import Yarn from '../Components/Yarn';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Card } from '@rneui/themed';
 
 const YarnTab: React.FC = () => {
   const [showAdd, setShowAdd] = useState(false);
@@ -58,11 +59,19 @@ const YarnTab: React.FC = () => {
 
   const handleAddYarn = async (e: any) => {
     e.preventDefault();
-    let res = await axios.post('http://localhost:3001/yarn', {
+    let res = await axios.post('http://192.168.1.150:3001/yarn', {
       newYarn
     });
     console.log(res);
     console.log(newYarn);
+  };
+
+  const handleDelete = async (yarn_id: any) => {
+    let params = { data: { yarn_id } };
+    let res = await axios.delete(`http://192.168.1.150:3001/yarn/`, {
+      params
+    });
+    console.log(res);
   };
 
   if (showAdd) {
@@ -80,18 +89,20 @@ const YarnTab: React.FC = () => {
     <View style={styles.yarnContainer}>
       <Text onPress={showForm} style={styles.addYarnBtn}>Add Yarn</Text>
       {yarns.map((yarn) => (
-        <View key={yarn.id} >
+        <Card key={yarn.id} >
           <Text style={styles.yarnList}  onPress={toggleModal}>
-          <Ionicons name="flower-outline"/> {yarn.name}
+            {yarn.name}
           </Text>
+          <Text>{yarn.color}</Text>
           <Modal
             ref={modalRef}
             visible={isModalVisible}
           >
             <Text>{JSON.stringify(yarn.name)}</Text>
             <Text onPress={hideModal}>Close</Text>
+            <Ionicons name="trash-outline" onPress={handleDelete} />
           </Modal>
-        </View>
+        </Card>
       ))}
     </View>
   );
