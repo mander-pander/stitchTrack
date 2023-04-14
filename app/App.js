@@ -13,7 +13,7 @@ export default function App() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
-            if (route.name === 'Home') {
+            if (route.name === 'Projects') {
               return (
                 <Ionicons
                   name={'list-outline'}
@@ -21,7 +21,7 @@ export default function App() {
                   color={color}
                 />
               );
-            } else if (route.name === 'AddProject') {
+            } else if (route.name === 'Add Project') {
               return (
                 <Ionicons
                   name={'add-outline'}
@@ -43,21 +43,27 @@ export default function App() {
           tabBarActiveTintColor: '#F9DBBD',
           tabBarStyle:
           {
-            backgroundColor: '#DA627D',
+            backgroundColor: '#A53860',
             borderRadius: 20,
             position: 'absolute'
 
 
           },
+          headerStyle: {
+            backgroundColor: '#A53860',
+          },
+          headerTitleStyle: {
+            color: '#F9DBBD',
+          }
         })}
-        initialRouteName="Home"
+        initialRouteName="Projects"
       >
         <Tab.Screen
-          name="Home"
+          name="Projects"
           component={Home}
         />
         <Tab.Screen
-          name="AddProject"
+          name="Add Project"
           component={AddProject}
         />
         <Tab.Screen
