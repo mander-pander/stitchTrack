@@ -16,34 +16,20 @@ const YarnTab: React.FC = () => {
       project_id: 0
   });
 
-  const modalRef = useRef(null);
-  const [isModalVisible, setModalVisible] = useState(false);
-
-  const showModal = () => {
-    setModalVisible(true);
-  };
-
-  const hideModal = () => {
-    setModalVisible(false);
-  };
-
-  const toggleModal = () => {
-    if (modalRef.current) {
-      modalRef.current.isVisible ? hideModal() : showModal();
-    }
-  };
-
   useEffect(() => {
-    const getYarn = async () => {
+    async function getYarn() {
       try {
-        let result = await axios.get(`http://192.168.1.150:3001/yarn`)
-        setYarns(result.data);
+        let response = await axios.get(`http://192.168.1.150:3001/yarn`);
+        if (response.data) {
+          setYarns(response.data);
+        }
       } catch (error) {
         setYarns([null]);
       }
     }
     getYarn();
-  });
+  }, []);
+
 
   const showForm = () => {
     setShowAdd(!showAdd);
@@ -66,14 +52,6 @@ const YarnTab: React.FC = () => {
     console.log(newYarn);
   };
 
-  const handleDelete = async (yarn_id: any) => {
-    let params = { data: { yarn_id } };
-    let res = await axios.delete(`http://192.168.1.150:3001/yarn/`, {
-      params
-    });
-    console.log(res);
-  };
-
   if (showAdd) {
     //form for new yarn addition
     return (
@@ -88,23 +66,71 @@ const YarnTab: React.FC = () => {
   return (
     <View style={styles.yarnContainer}>
       <Text onPress={showForm} style={styles.addYarnBtn}>Add Yarn</Text>
-      {yarns.map((yarn) => (
-        <Card key={yarn.id} >
-          <Text style={styles.yarnList}  onPress={toggleModal}>
-            {yarn.name}
-          </Text>
-          <Text>{yarn.color}</Text>
-          <Modal
-            ref={modalRef}
-            visible={isModalVisible}
-          >
-            <Text>{JSON.stringify(yarn.name)}</Text>
-            <Text onPress={hideModal}>Close</Text>
-            <Ionicons name="trash-outline" onPress={handleDelete} />
-          </Modal>
-        </Card>
-      ))}
+      {yarns.map((yarn) => <CardWithModal yarn={yarn} />)}
     </View>
+  );
+}
+
+// Problem
+// We can have more than 1 yarn which creates more than 1 modal. However
+// we have only a single modal reference so when we open a specific modal
+// React won't know which one to open since there's one reference for all
+// modals.
+
+// Solution:
+// Break out card with modal into its own component which handles it's own
+// visible logic and reference. This way each card with modal has their own
+// reference.
+
+const CardWithModal = (props) => {
+  const {
+    yarn
+  } = props;
+
+  const modalRef = useRef(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  const hideModal = () => {
+    setModalVisible(false);
+  };
+
+  const toggleModal = () => {
+    if (modalRef.current) {
+      modalRef.current.isVisible ? hideModal() : showModal();
+    }
+  };
+
+  const handleDelete = async (yarn_id: any) => {
+    let params = { data: { yarn_id } };
+    let res = await axios.delete(`http://192.168.1.150:3001/yarn/`, {
+      params
+    });
+    console.log(res);
+  };
+
+  return (
+    <Card key={yarn.id} >
+      <Text style={styles.yarnList}  onPress={toggleModal}>
+        {yarn.name}
+      </Text>
+      <Text>{yarn.color}</Text>
+      {/* modal pop up */}
+      <Modal
+        ref={modalRef}
+        visible={isModalVisible}
+      >
+        <View style={styles.modalInfo}>
+          <Text>{yarn.name}</Text>
+          <Text>{yarn.color}</Text>
+          <Text onPress={hideModal}>Close</Text>
+          <Ionicons name="trash-outline" onPress={handleDelete} />
+        </View>
+      </Modal>
+    </Card>
   );
 }
 
@@ -124,7 +150,12 @@ const styles = StyleSheet.create({
   yarnList: {
     color: '#450920',
     fontSize: 20,
-  }
+  },
+  modalInfo: {
+    minHeight: '100%',
+    backgroundColor: '#F9DBBD',
+    color: '#450920',
+  },
 })
 
 export default YarnTab;
