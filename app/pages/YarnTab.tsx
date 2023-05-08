@@ -52,14 +52,16 @@ const YarnTab: React.FC = () => {
     console.log(newYarn);
   };
 
+  //form for new yarn addition
   if (showAdd) {
-    //form for new yarn addition
     return (
-      <>
+      <View style={styles.addForm}>
         <Yarn yarn_name={newYarn.yarn_name} weight={newYarn.weight} yardage={newYarn.yardage} color={newYarn.color} onChange={handleYarnChange} />
-        <Text onPress={handleAddYarn}>Add Yarn</Text>
-        <Text onPress={showForm}>Go Back</Text>
-      </>
+        <View style={styles.buttons}>
+          <Text onPress={handleAddYarn}>Add Yarn</Text>
+          <Text onPress={showForm}>Go Back</Text>
+        </View>
+      </View>
     );
   }
 
@@ -122,6 +124,7 @@ const CardWithModal = (props) => {
       <Modal
         ref={modalRef}
         visible={isModalVisible}
+        key={yarn.id}
       >
         <View style={styles.modalInfo}>
           <Text>{yarn.name}</Text>
@@ -146,6 +149,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#450920',
     marginTop: 5,
     marginRight: 2,
+  },
+  addForm: {
+    backgroundColor: '#F9DBBD',
+    color: '#450920',
+    minHeight: '100%',
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
   yarnList: {
     color: '#450920',
