@@ -130,7 +130,7 @@ const CardWithModal = (props) => {
           <Text>{yarn.name}</Text>
           <Text>{yarn.color}</Text>
           <Text onPress={hideModal}>Close</Text>
-          <Ionicons name="trash-outline" onPress={handleDelete} />
+          <Ionicons name="trash-outline" onPress={() => handleDelete(yarn.id)} />
         </View>
       </Modal>
     </Card>
