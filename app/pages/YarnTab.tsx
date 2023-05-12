@@ -28,7 +28,7 @@ const YarnTab: React.FC = () => {
       }
     }
     getYarn();
-  }, []);
+  }, [yarns]);
 
 
   const showForm = () => {
@@ -50,25 +50,50 @@ const YarnTab: React.FC = () => {
     });
     console.log(res);
     console.log(newYarn);
+    setYarns([...yarns, res.data]);
+    setShowAdd(false);
   };
 
-  //form for new yarn addition
-  if (showAdd) {
-    return (
-      <View style={styles.addForm}>
-        <Yarn yarn_name={newYarn.yarn_name} weight={newYarn.weight} yardage={newYarn.yardage} color={newYarn.color} onChange={handleYarnChange} />
-        <View style={styles.buttons}>
-          <Text onPress={handleAddYarn}>Add Yarn</Text>
-          <Text onPress={showForm}>Go Back</Text>
-        </View>
-      </View>
-    );
-  }
+  const handleRefreshYarns = async () => {
+    let response = await axios.get(`http://192.168.1.150:3001/yarn`);
+    if (response.data) {
+      setYarns(response.data);
+    }
+  };
+
 
   return (
     <View style={styles.yarnContainer}>
-      <Text onPress={showForm} style={styles.addYarnBtn}>Add Yarn</Text>
-      {yarns.map((yarn) => <CardWithModal yarn={yarn} />)}
+      {showAdd ? (
+        <View style={styles.addForm}>
+          <Yarn
+            yarn_name={newYarn.yarn_name}
+            weight={newYarn.weight}
+            yardage={newYarn.yardage}
+            color={newYarn.color}
+            onChange={handleYarnChange}
+          />
+          <View style={styles.buttons}>
+            <Text onPress={handleAddYarn}>Add Yarn</Text>
+            <Text onPress={showForm}>Go Back</Text>
+          </View>
+        </View>
+      ) : (
+        <>
+          <Text onPress={showForm} style={styles.addYarnBtn}>
+            Add Yarn
+          </Text>
+          {yarns.map((yarn) => (
+            <CardWithModal
+              key={yarn.id}
+              yarn={yarn}
+              yarns={yarns}
+              setYarns={setYarns}
+              onRefreshYarns={handleRefreshYarns}
+            />
+          ))}
+        </>
+      )}
     </View>
   );
 }
@@ -86,7 +111,7 @@ const YarnTab: React.FC = () => {
 
 const CardWithModal = (props) => {
   const {
-    yarn
+    yarn, yarns, setYarns, onRefreshYarns
   } = props;
 
   const modalRef = useRef(null);
@@ -112,6 +137,11 @@ const CardWithModal = (props) => {
       params
     });
     console.log(res);
+
+    setYarns(prevYarns => prevYarns.filter(yarn => yarn.id !== yarn_id));
+    onRefreshYarns();
+
+    toggleModal();
   };
 
   return (
@@ -124,13 +154,14 @@ const CardWithModal = (props) => {
       <Modal
         ref={modalRef}
         visible={isModalVisible}
-        key={yarn.id}
       >
         <View style={styles.modalInfo}>
           <Text>{yarn.name}</Text>
           <Text>{yarn.color}</Text>
-          <Text onPress={hideModal}>Close</Text>
-          <Ionicons name="trash-outline" onPress={() => handleDelete(yarn.id)} />
+          <View style={styles.buttons}>
+            <Text onPress={hideModal}>Close</Text>
+            <Ionicons name="trash-outline" onPress={() => handleDelete(yarn.id)} />
+          </View>
         </View>
       </Modal>
     </Card>
