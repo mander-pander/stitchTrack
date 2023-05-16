@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
 import React, { useState } from "react";
 // import Date from '../Components/Date';
 import Gauge from '../Components/Gauge';
@@ -27,13 +27,17 @@ const AddProject = () => {
 
     const handleAddProject = async (e: any) => {
         e.preventDefault();
-        let res = await axios.post('http://10.113.6.118:3001/project', {
-          project, yarn
-        })
-        console.log(res);
-        console.log(project)
-        console.log("yarn info")
-      }
+        if (project.name.trim() === '') {
+          Alert.alert('Error', 'Please enter a name for project');
+        } else {
+          let res = await axios.post('http://192.168.1.150:3001/project', {
+            project, yarn
+          })
+          console.log(res);
+          console.log(project)
+          console.log("yarn info")
+        }
+    }
 
       const handleProjectChange = (e: any) => {
         e.preventDefault();
