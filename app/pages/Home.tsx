@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Modal, Button } from 'react-native';
+import { StyleSheet, Text, View, Modal, Button, TextInput } from 'react-native';
 import React from "react";
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -21,14 +21,12 @@ const Home = () => {
     getProjects();
   }, []);
 
-
-
   return (
     <View style={styles.container}>
       {projects.map((project) => <CardWithModal project={project} />)}
     </View>
   );
-}
+};
 
 const CardWithModal = (props) => {
   const {
@@ -37,6 +35,7 @@ const CardWithModal = (props) => {
 
   const modalRef = useRef(null);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [editProject, setEditProject] = useState(null);
 
   const showModal = () => {
     setModalVisible(true);
@@ -51,6 +50,21 @@ const CardWithModal = (props) => {
       modalRef.current.isVisible ? hideModal() : showModal();
     }
   };
+
+  const toggleEdit = () => {
+    setEditProject(true);
+  }
+
+  if (editProject) {
+    return (
+      <Modal
+        ref={modalRef}>
+          <Text>{project.name}</Text>
+      </Modal>
+    )
+  }
+
+
   return (
     <Card key={project.id}>
       <Text style={styles.projectList} onPress={toggleModal}>
@@ -60,6 +74,7 @@ const CardWithModal = (props) => {
       <Modal
         ref={modalRef}
         visible={isModalVisible}
+        key={project.id}
       >
         <View style={styles.modalInfo}>
           <Text>
@@ -76,7 +91,7 @@ const CardWithModal = (props) => {
           </Text>
           <View style={styles.buttons}>
             <Button color="#450920" title="Go back to projects" onPress={hideModal} />
-            <Button color="#450920" title="Edit project details" />
+            <Button color="#450920" title="Edit project details" onPress={toggleEdit}/>
           </View>
         </View>
       </Modal>
