@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Modal, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Modal, Button, TextInput, Image } from 'react-native';
 import React from "react";
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -77,6 +77,10 @@ const CardWithModal = (props) => {
         key={project.id}
       >
         <View style={styles.modalInfo}>
+          <Image
+            style={{width: '100%', height: '50%'}}
+            source={{uri:'https://images.unsplash.com/photo-1544967919-44c1ef2f9e7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2750&q=80'}}
+          />
           <Text>
             Project Name: {project.name}
           </Text>
@@ -101,12 +105,12 @@ const CardWithModal = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F9DBBD',
+    backgroundColor: '#463F3A',
     minHeight: '100%',
   },
   projectList: {
     fontSize: 20,
-    color: '#450920',
+    color: '#463F3A',
   },
   modalInfo: {
     minHeight: '100%',
